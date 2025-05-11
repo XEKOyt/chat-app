@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat Hub</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Onboarding Section -->
+  <div id="username-prompt" class="onboarding-container">
+    <div class="onboarding-card">
+      <div class="onboarding-header">
+        <i class="fas fa-comments main-icon"></i>
+        <h1>Chat Hub</h1>
+        <p class="subtitle">Connect with people around the world</p>
+      </div>
+      
+      <div class="onboarding-form">
+        <div class="input-group">
+          <label for="username-input">Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user icon"></i>
+            <input id="username-input" type="text" placeholder="Enter your username" required />
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="profile-pic-input">Profile Picture URL</label>
+          <div class="input-wrapper">
+            <i class="fas fa-image icon"></i>
+            <input id="profile-pic-input" type="text" placeholder="Enter URL or leave blank for default" />
+          </div>
+          <div class="avatar-preview">
+            <img id="avatar-preview-img" src="/api/placeholder/80/80" alt="Default avatar">
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="status-input">Status</label>
+          <div class="input-wrapper">
+            <i class="fas fa-circle icon"></i>
+            <select id="status-input">
+              <option value="Online">Online</option>
+              <option value="Away">Away</option>
+              <option value="Busy">Busy</option>
+              <option value="Invisible">Invisible</option>
+            </select>
+          </div>
+        </div>
+        
+        <button id="set-username" class="primary-button">
+          <i class="fas fa-sign-in-alt"></i>
+          Join Chat
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Chat Interface -->
+  <div id="chat-container" style="display: none;">
+    <div class="chat-sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-comments"></i>
+        <h2>Chat Hub</h2>
+      </div>
+      
+      <div class="user-profile">
+        <div class="user-avatar-container">
+          <img id="user-avatar" src="/api/placeholder/80/80" alt="Your avatar">
+          <span id="user-status-indicator" class="status-indicator online"></span>
+        </div>
+        <div class="user-info">
+          <h3 id="current-username">Username</h3>
+          <p id="current-status" class="status">Online</p>
+        </div>
+        <div class="user-actions">
+          <button id="edit-profile" class="icon-button">
+            <i class="fas fa-cog"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="online-users-section">
+        <div class="section-header">
+          <h3>Online Users</h3>
+          <span id="online-count" class="badge">0</span>
+        </div>
+        <ul id="online-users-list" class="users-list">
+          <!-- Online users will be added here dynamically -->
+        </ul>
+      </div>
+    </div>
+    
+    <div class="chat-main">
+      <div class="chat-header">
+        <div class="room-info">
+          <h2>Public Chat</h2>
+          <p><span id="active-now">0</span> active now</p>
+        </div>
+        <div class="chat-actions">
+          <button id="toggle-theme" class="icon-button" title="Toggle Dark Mode">
+            <i class="fas fa-moon"></i>
+          </button>
+          <button id="clear-chat" class="icon-button" title="Clear Chat">
+            <i class="fas fa-trash"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="chat-messages-container">
+        <ul id="messages" class="messages-list">
+          <!-- Messages will be added here dynamically -->
+        </ul>
+        <div id="new-messages-notification" class="new-messages-alert">
+          <span>New messages</span>
+          <i class="fas fa-chevron-down"></i>
+        </div>
+      </div>
+      
+      <div class="chat-input-area">
+        <form id="form" action="">
+          <div class="input-wrapper">
+            <button type="button" id="emoji-button" class="icon-button">
+              <i class="far fa-smile"></i>
+            </button>
+            <input id="input" autocomplete="off" placeholder="Type a message..." required />
+            <button type="button" id="attach-button" class="icon-button">
+              <i class="fas fa-paperclip"></i>
+            </button>
+          </div>
+          <button type="submit" class="send-button">
+            <i class="fas fa-paper-plane"></i>
+          </button>
+        </form>
+        <div id="emoji-picker" class="emoji-picker" style="display: none;">
+          <!-- Emoji picker content will be added here -->
+        </div>
+        <div id="typing-indicator" class="typing-indicator" style="display: none;">
+          <span id="typing-username">Someone</span> is typing...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Profile Edit Modal -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Edit Profile</h2>
+        <button id="close-modal" class="close-button">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label for="edit-username">Username</label>
+          <div class="input-wrapper">
+            <i class="fas fa-user icon"></i>
+            <input id="edit-username" type="text" placeholder="Enter your username" required />
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="edit-profile-pic">Profile Picture URL</label>
+          <div class="input-wrapper">
+            <i class="fas fa-image icon"></i>
+            <input id="edit-profile-pic" type="text" placeholder="Enter URL or leave blank for default" />
+          </div>
+          <div class="avatar-preview">
+            <img id="edit-avatar-preview" src="/api/placeholder/80/80" alt="Your avatar">
+          </div>
+        </div>
+        
+        <div class="input-group">
+          <label for="edit-status">Status</label>
+          <div class="input-wrapper">
+            <i class="fas fa-circle icon"></i>
+            <select id="edit-status">
+              <option value="Online">Online</option>
+              <option value="Away">Away</option>
+              <option value="Busy">Busy</option>
+              <option value="Invisible">Invisible</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="save-profile" class="primary-button">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
